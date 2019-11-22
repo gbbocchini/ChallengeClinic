@@ -15,8 +15,8 @@ Serverless (AWS Lambda, AWS S3, AWS API Gateway, AWS CloudWatch, AWS CloudFormat
 - Pronto!
 
 
-##Deploy
+## Deploy
 Um versão pode ser encontrada em: https://bm58oqe17c.execute-api.us-east-1.amazonaws.com/dev
 
-##Testes
+## Testes
 Os testes podem ser rodados com `python manage.py test` do folder clonado. Este repo esta integrado com TravisCI.
