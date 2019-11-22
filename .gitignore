@@ -1,0 +1,9 @@
+../venv
+../tests.ipynb
+../Untitled.ipynb
+../Untitled1.ipynb
+../.ipynb_checkpoints
+__pycache__/
+zappa_settings.json
+.idea
+.env
