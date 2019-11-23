@@ -21,6 +21,10 @@ data0 = json.loads(response0)['list']
 request = requests.get(urlTest)
 data1 = request.json()['list']
 
+c = Client()
+response_get = c.get('/')
+response_post = c.post('/')
+
 
 class GetDataTestCase(SimpleTestCase):
     def test_url(self):
@@ -33,14 +37,15 @@ class GetDataTestCase(SimpleTestCase):
 
 
 class HomeViewTestCase(SimpleTestCase):
-    def test_view(self):
-        c = Client()
-        response_get = c.get('/')
-        response_post = c.post('/')
+    def test_response_200(self):
         self.assertEqual(response_get.status_code, 200)
         print("Tested response 200", flush=True)
+
+    def test_response_405(self):
         self.assertEqual(response_post.status_code, 405)
         print("Tested response 400", flush=True)
+
+    def test_template(self):
         self.assertTemplateUsed(response_get, 'home.html')
         print("Tested Template usage", flush=True)
 

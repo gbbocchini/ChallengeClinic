@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gbbocchini/ChallengeClinic.svg?branch=master)](https://travis-ci.org/gbbocchini/ChallengeClinic)
+
 
 # Soluçao para o challenge proposto em https://github.com/iclinic/weather-mini-challenge
 
