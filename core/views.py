@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.views import View
+from django.conf import settings
 import aiohttp
 import asyncio
 import uvloop
-import json
-from datetime import datetime
-from .helpers.get_api_data import get_data
+from .data_helpers.get_api_data import get_data
+from .data_helpers.data_processor import DataProcessor
 
 # asyncio "Booster"
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -13,41 +13,25 @@ loop = asyncio.get_event_loop()
 
 
 class HomeView(View):
-    @staticmethod
-    def get(request):
+    def __init__(self, **kwargs):
+        self.url = "https://api.openweathermap.org/data/2.5/forecast?id=3451328&appid="+settings.WEATHER_API_KEY
+        self.data_processor = DataProcessor()
+        super().__init__(**kwargs)
+
+    def get(self, request):
         try:
             # calling the api in an async job, the process only goes on with a response
-            response = loop.run_until_complete(get_data())
-            data = json.loads(response)["list"]
-
-            # dict with only dates + humidity data
-            temp_dict = {
-                "date": [data[i]["dt_txt"] for i in range(len(data))],
-                "humidity": [data[i]["main"]["humidity"] for i in range(len(data))],
-            }
-
-            # based on the dict above, filter only dates with humidity => 70
-            result_dict = {
-                "date": [
-                    temp_dict["date"][i].split(" ")
-                    for i in range(len(temp_dict["date"]))
-                    if temp_dict["humidity"][i] >= 70
-                ]
-            }
-            dates = [result_dict["date"][i][0] for i in range(len(result_dict["date"]))]
+            response = loop.run_until_complete(get_data(self.url))
+            dates = self.data_processor.response_processor(response)
 
             # single dates (the api returns results for 3 hours periods along 5 days, here get only single dates)
-            final = []
-            for i in dates:
-                if i not in final:
-                    final.append(i)
+            date_format = self.data_processor.dates_processor(dates)
 
             # converting dates to week days
-            result = []
-            for i in final:
-                result.append(datetime.strptime(i, "%Y-%m-%d").strftime("%A"))
+            weekday_format = self.data_processor.weekdays_processor(date_format)
+
             return render(
-                request, "home.html", {"week_day": result, "date": final}
+                request, "home.html", {"week_day": weekday_format, "date": date_format}
             )  # render dates and week days
         except RuntimeError:
             return render(

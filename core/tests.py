@@ -1,12 +1,12 @@
 from django.test import SimpleTestCase
-from django.test import Client, client
+from django.test import Client
 from django.conf import settings
 import asyncio
 import uvloop
 import requests
 import json
 
-from .helpers.get_api_data import get_data, url
+from .data_helpers.get_api_data import get_data
 from .views import HomeView
 
 
@@ -15,7 +15,7 @@ loop = asyncio.get_event_loop()
 
 urlTest = "https://api.openweathermap.org/data/2.5/forecast?id=3451328&appid="+settings.WEATHER_API_KEY
 
-response0 = loop.run_until_complete(get_data())
+response0 = loop.run_until_complete(get_data(urlTest))
 data0 = json.loads(response0)['list']
 
 request = requests.get(urlTest)
@@ -25,10 +25,12 @@ c = Client()
 response_get = c.get('/')
 response_post = c.post('/')
 
+home = HomeView()
+
 
 class GetDataTestCase(SimpleTestCase):
     def test_url(self):
-        self.assertEqual(urlTest, url)
+        self.assertEqual(urlTest, home.url)
         print("Tested Urls", flush=True)
 
     def test_retrieve(self):
