@@ -21,32 +21,46 @@
 <br>
 <br>
 <div class="container">
-<div class="jumbotron">
-    <div class="container" align="center">
-        <h2>Better get an umbrella these days*: </h2>
-        <p>*humidity over 70% sometimes during these days OR the entire day</p>
-        <br>
-        <br>
-    </div>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            {% for day in week_day %}
-            <th>{{day}}</th>
-            {%endfor%}
-        </tr>
+    <div class="jumbotron">
+        <div class="container" align="center">
+            <h2>Better get an umbrella these days*: </h2>
+            <p>*humidity over 70% sometimes during these days OR the entire day</p>
+            <br>
+            <br>
+        </div>
+        {% if error %}
+        <div class="container" align="center">
+            <h3>{{error}}</h3>
+        </div>
+        {%endif%}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                {% for day in week_day %}
+                <th>{{day}}</th>
+                {%endfor%}
+            </tr>
             </thead>
-        <tbody>
-        <tr>
-            {% for i in date %}
-            <th>{{i}}</th>
-            {%endfor%}
-        </tr>
-</tbody>
-
-
-    </table>
-</div>
+            <tbody>
+            <tr>
+                {% for i in date %}
+                <td>{{i}}</td>
+                {%endfor%}
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <div class="container" align="center">
+            <div class="card bg-light mb-3" style="max-width: 18rem;">
+                <div class="card-header">Weather Now in Ribeirao Preto:</div>
+                <div class="card-body">
+                    <h5 class="card-title">Temperature: {{temp_now}} °C</h5>
+                    <p class="card-text">Humidity: {{hum_now}}%</p>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 </body>
 </html>

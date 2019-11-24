@@ -1,40 +1,54 @@
-from django.test import SimpleTestCase
-from django.test import Client
+from django.test import SimpleTestCase, Client
 from django.conf import settings
 import asyncio
 import uvloop
 import requests
 import json
 
-from .data_helpers.get_api_data import get_data
+from .repository.get_api_data import ApiHandler
+from .data_processor.data_processor import Processor
 from .views import HomeView
 
+home = HomeView()
+processor = Processor()
+api_handler = ApiHandler()
 
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-loop = asyncio.get_event_loop()
+urlForecast = (
+    "https://api.openweathermap.org/data/2.5/forecast?id=6322515&appid="
+    + settings.WEATHER_API_KEY
+)
+urlWeather = (
+    "https://api.openweathermap.org/data/2.5/weather?id=6322515&appid="
+    + settings.WEATHER_API_KEY
+)
 
-urlTest = "https://api.openweathermap.org/data/2.5/forecast?id=3451328&appid="+settings.WEATHER_API_KEY
 
-response0 = loop.run_until_complete(get_data(urlTest))
-data0 = json.loads(response0)['list']
+response_forecast0 = api_handler.get_forecast()
+data_forecast0 = json.loads(response_forecast0)["list"]
 
-request = requests.get(urlTest)
-data1 = request.json()['list']
+response_forecast1 = requests.get(urlForecast)
+data_forecast1 = response_forecast1.json()["list"]
+
+response_weather0 = api_handler.get_weather_now()
+data_weather0 = json.loads(response_weather0)["main"]
+
+response_weather1 = requests.get(urlWeather)
+data_weather1 = response_weather1.json()["main"]
 
 c = Client()
-response_get = c.get('/')
-response_post = c.post('/')
-
-home = HomeView()
+response_get = c.get("/")
+response_post = c.post("/")
 
 
-class GetDataTestCase(SimpleTestCase):
-    def test_url(self):
-        self.assertEqual(urlTest, home.url)
-        print("Tested Urls", flush=True)
+class TestApiHandler(SimpleTestCase):
+    def test_urls(self):
+        self.assertEqual(api_handler.urlForecast, urlForecast)
+        self.assertEqual(api_handler.urlWeatherNow, urlWeather)
+        print("Tested Api url to be called", flush=True)
 
     def test_retrieve(self):
-        self.assertEqual(data0, data1)
+        self.assertEqual(data_forecast0, data_forecast1)
+        self.assertEqual(data_weather0, data_weather1)
         print("Tested api data retrieve", flush=True)
 
 
@@ -48,12 +62,5 @@ class HomeViewTestCase(SimpleTestCase):
         print("Tested response 400", flush=True)
 
     def test_template(self):
-        self.assertTemplateUsed(response_get, 'home.html')
+        self.assertTemplateUsed(response_get, "home.html")
         print("Tested Template usage", flush=True)
-
-
-
-
-
-
-

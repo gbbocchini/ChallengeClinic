@@ -7,12 +7,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET')
+SECRET_KEY = config("SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -60,7 +60,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "iclinic.wsgi.application"
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -93,4 +92,4 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-WEATHER_API_KEY = config('WEATHER_KEY')
+WEATHER_API_KEY = config("WEATHER_KEY")

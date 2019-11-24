@@ -5,8 +5,15 @@
 
 
 ## Implementaçao:
-Serverless (AWS Lambda, AWS S3, AWS API Gateway, AWS CloudWatch, AWS CloudFormation) utilizando Zappa (https://www.zappa.io/) e Django.
+Serverless (AWS Lambda, AWS S3, AWS API Gateway, AWS CloudWatch, AWS CloudFormation) utilizando Django e Zappa (https://www.zappa.io/).
 
+
+## Estrutura do Projeto
+- Nome Projeto: iclinic (na pasta `iclinic/iclinic` encontram-se todos os setting e configuraçoes Django);
+- App Core (`iclinic/core`): app do projeto;
+- `iclinic/core/repository`: contem classe `ApiHandler` (toda a interaçao com a API e feita somente por essa classe e seus metodos);
+- `iclinic/data_processor`: contem classe `Processor` responsavel por todo o processamento/transformaçao dos dados obtidos via `ApiHandler`;
+- `iclinic/views`: responsavel pela renderizaçao do template `templates/home.html` com as infos processadas via metodos de `Processor`
 
 ## Execuçao local
 - Clone este repositorio (`git clone` ...);
